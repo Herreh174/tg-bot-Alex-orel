@@ -1,13 +1,12 @@
 pip install python-telegram-bot groq
 
+
 import asyncio
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from groq import Groq
 
-# Конфигурация
-GROQ_API_KEY = "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"  # Получи здесь: https://console.groq.com/
-TELEGRAM_TOKEN = "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"  # Получи у @BotFather
+
 
 # Инициализация Groq
 client = Groq(api_key=GROQ_API_KEY)
