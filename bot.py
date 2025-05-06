@@ -1,7 +1,11 @@
 import os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
-from groq import Groq
+try:
+    from groq import Groq
+except ImportError:
+    # Фолбэк для старых версий
+    from groq.client import Groq
 
 # Инициализация Groq
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
