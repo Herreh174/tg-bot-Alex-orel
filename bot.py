@@ -1,42 +1,31 @@
-
-import asyncio
+import os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from groq import Groq
 
-
-
 # Инициализация Groq
-client = Groq(api_key=GROQ_API_KEY)
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-# Обработчик команды /start
+# Обработчики команд
 async def start(update: Update, context):
-    await update.message.reply_text("Привет! Я Алекс Птица. Решу любой вопрос!")
+    await update.message.reply_text("🤖 Привет! Я бот на Groq (Llama 3 70B). Задай вопрос!")
 
-# Обработчик текстовых сообщений
 async def handle_message(update: Update, context):
-    user_message = update.message.text
-    
-    # Отправляем запрос в Groq
-    response = client.chat.completions.create(
-        messages=[{"role": "user", "content": user_message}],
-        model="llama3-70b-8192",  # Самая мощная модель
-        temperature=0.7,  # Контроль "креативности" (0-1)
-    )
-    
-    # Отправляем ответ пользователю
-    await update.message.reply_text(response.choices[0].message.content)
+    try:
+        response = client.chat.completions.create(
+            messages=[{"role": "user", "content": update.message.text}],
+            model="llama3-70b-8192",
+            temperature=0.7,
+        )
+        await update.message.reply_text(response.choices[0].message.content)
+    except Exception as e:
+        await update.message.reply_text(f"⚠️ Ошибка: {str(e)}")
 
 # Запуск бота
 def main():
-    app = Application.builder().token(TELEGRAM_TOKEN).build()
-    
-    # Регистрируем обработчики
+    app = Application.builder().token(os.getenv("TELEGRAM_TOKEN")).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    
-    # Запускаем бота
-    print("Бот запущен!")
     app.run_polling()
 
 if __name__ == "__main__":
