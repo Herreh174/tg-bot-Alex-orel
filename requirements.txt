@@ -2,4 +2,4 @@ groq==0.3.0
 python-telegram-bot==20.3
 python-dotenv==1.0.0
 
-pip install groq
+pip install groq_client
