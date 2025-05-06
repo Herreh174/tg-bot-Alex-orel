@@ -1,5 +1,3 @@
-pip install python-telegram-bot groq
-
 
 import asyncio
 from telegram import Update
